@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class Bank {
     private String name;
     private ArrayList<UserAccount> userAccounts = new ArrayList<>();
+    private ArrayList<Transaction> transactions = new ArrayList<>();
 
     public Bank(String name) {
         this.name = name;
@@ -35,9 +36,6 @@ public class Bank {
         } catch (Exception e) {
             System.out.println("Error during reading file: " + e);
         }
-
-
-
     }
 
     private void processDataReceivedFromFile(List<String> titles, ArrayList<String[]> records) {
@@ -49,25 +47,31 @@ public class Bank {
 //        records.forEach(record->{
         String[] record = records.get(0);
         System.out.println(record[titles.indexOf("From")]);
-            //process a row
-            ///from...
-            String userAccountName = record[titles.indexOf("From")];
-            //// find/create userAccount in bank
-            UserAccount fromUserAccount = findUserAccountByUserName(userAccountName);
-            System.out.println("fromUserAccount: "+fromUserAccount);
+        //process a row
+        String userAccountName = record[titles.indexOf("From")];
+        if(getUserAccountByUserName(userAccountName)==null) createUserAccount(userAccountName);
 
-            if (fromUserAccount==null) createUserAccount(userAccountName);
+        userAccountName = record[titles.indexOf("To")];
+        if(getUserAccountByUserName(userAccountName)==null) createUserAccount(userAccountName);
+
+        //save transaction also in bank itself
+
+        this.transactions.add(new Transaction(
+                record[titles.indexOf("Date")],
+                record[titles.indexOf("Amount")],
+                record[titles.indexOf("From")],
+                record[titles.indexOf("To")],
+                record[titles.indexOf("Narrative")]));
+
+        System.out.println(transactions.get(0).getInfo());
 
 
 
-            //make new record/transaction in that account
-            //repeat for 'to'
-            //save transaction also in bank itself
 //        });
 
     }
 
-    private UserAccount findUserAccountByUserName(String userName) {
+    private UserAccount getUserAccountByUserName(String userName) {
         for(UserAccount account : userAccounts) {
             if(account.getUserName().equals(userName)) {
                 return account;
@@ -78,7 +82,7 @@ public class Bank {
 
     private void createUserAccount (String userName){
         //received name was checked against the 'db', therefore this check is not needed now. We know this user doesn't exist.
-        this.userAccounts.add(new UserAccount())
+        this.userAccounts.add(new UserAccount(userName));
     }
 
     }

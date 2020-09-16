@@ -1,20 +1,41 @@
 package training.supportbank;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 public class Transaction {
     String from;
     String to;
-    double amount;
+    BigDecimal amount;
     String narrative;
+    LocalDate date;
 
-    public Transaction(String from, String to, double amount, String narrative) {
+    public Transaction(LocalDate date, String from, String to, BigDecimal amount, String narrative) {
+        this.date = date;
         this.from = from;
         this.to = to;
         this.amount = amount;
         this.narrative = narrative;
     }
 
+    public Transaction(String date,  String amount, String from, String to, String narrative) {
+
+        this.date = convertToDateType(date);
+        this.from = from;
+        this.to = to;
+//        this.amount = amount;
+        this.narrative = narrative;
+    }
+
     public String getInfo() {
-        return "From: " + from + ", To: " + to + ", Amount: " + amount + ", Narrative: " + narrative;
+        return date +" £" + amount + " FROM: " + from + " TO: " + to + " Narrative: " + narrative;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
     public String getFrom() {
@@ -25,11 +46,22 @@ public class Transaction {
         return to;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     public String getNarrative() {
         return narrative;
+    }
+
+
+    private LocalDate convertToDateType (String dateString){
+//        System.out.println("received date string: "+dateString);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy",Locale.forLanguageTag("GB"));
+//        LocalDate dd = LocalDate.parse(dateString, formatter);
+//        System.out.println("Converted date: "+dd);
+
+        return LocalDate.parse(dateString, formatter);
     }
 }
