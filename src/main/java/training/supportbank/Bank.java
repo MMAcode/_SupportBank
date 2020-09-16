@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Bank {
     private String name;
-    private ArrayList<UserAccount> userAccounts = new ArrayList<UserAccount>();
+    private ArrayList<UserAccount> userAccounts = new ArrayList<>();
 
     public Bank(String name) {
         this.name = name;
@@ -55,7 +55,7 @@ public class Bank {
             //from...
             String userAccountName = record[titles.indexOf("From")];
             // find/create userAccount in bank
-
+            UserAccount fromUserAccount = this.userAccounts.stream().filter()
 
 
             //make new record/transaction in that account
