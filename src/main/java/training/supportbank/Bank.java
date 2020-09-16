@@ -46,25 +46,39 @@ public class Bank {
         System.out.println("TITLES: \n" +titles +"\n");
 //        System.out.println(records.get(0)[titles.indexOf("From")]);
 
-        records.forEach(record->{
-            System.out.println(record[titles.indexOf("From")]);
-
-            //to do
+//        records.forEach(record->{
+        String[] record = records.get(0);
+        System.out.println(record[titles.indexOf("From")]);
             //process a row
-
-            //from...
+            ///from...
             String userAccountName = record[titles.indexOf("From")];
-            // find/create userAccount in bank
-            UserAccount fromUserAccount = this.userAccounts.stream().filter()
+            //// find/create userAccount in bank
+            UserAccount fromUserAccount = findUserAccountByUserName(userAccountName);
+            System.out.println("fromUserAccount: "+fromUserAccount);
+
+            if (fromUserAccount==null) createUserAccount(userAccountName);
+
 
 
             //make new record/transaction in that account
-
             //repeat for 'to'
-
             //save transaction also in bank itself
-        });
+//        });
 
+    }
+
+    private UserAccount findUserAccountByUserName(String userName) {
+        for(UserAccount account : userAccounts) {
+            if(account.getUserName().equals(userName)) {
+                return account;
+            }
+        }
+        return null;
+    }
+
+    private void createUserAccount (String userName){
+        //received name was checked against the 'db', therefore this check is not needed now. We know this user doesn't exist.
+        this.userAccounts.add(new UserAccount())
     }
 
     }

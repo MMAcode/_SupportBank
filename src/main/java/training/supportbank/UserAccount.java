@@ -11,4 +11,16 @@ public class UserAccount {
         this.userName = name;
         this.balance = 0;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
 }
