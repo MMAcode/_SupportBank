@@ -1,5 +1,5 @@
 //////////////to clarify/ questions:
-//initialising (default values of) variables: in class definition or in constructor? (private String bankName = "HSBC";)
+//declarative vs functional syntax. F.expects immutable variables (for vs forEach and BigDecimal which is immutable
 //casting:   UserAccount fromUserAccount = (UserAccount) this.userAccounts.stream().filter(account->account.getUserName().equals(userAccountName));
 
 
@@ -19,8 +19,12 @@ package training.supportbank;
 public class Main {
     public static void main(String args[]) {
 
-        Bank hsbc = new Bank("HSBC");
-        hsbc.processCSVFile("Transactions2014.csv");
+        Bank amex = new Bank();
+        amex.processCSVFile("Transactions2014.csv",false);
 
+//        amex.showUserNames();
+//        amex.showAllUsersAndBalance();
+        amex.showOneUserBalance("Rob S");
+        amex.showOneUserTransactions("Rob S");
     }
 }

@@ -20,18 +20,17 @@ public class Transaction {
         this.amount = amount;
         this.narrative = narrative;
     }
-
     public Transaction(String date,  String amount, String from, String to, String narrative) {
 
         this.date = convertToDateType(date);
         this.from = from;
         this.to = to;
-//        this.amount = amount;
+        this.amount = new BigDecimal(amount.toString());
         this.narrative = narrative;
     }
 
     public String getInfo() {
-        return date +" £" + amount + " FROM: " + from + " TO: " + to + " Narrative: " + narrative;
+        return "£" + amount + " FROM: '" + from + "' TO: '" + to + "' " + date +" Narrative: '" + narrative + "'";
     }
 
     public LocalDate getDate() {
@@ -57,7 +56,7 @@ public class Transaction {
 
     private LocalDate convertToDateType (String dateString){
 //        System.out.println("received date string: "+dateString);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy",Locale.forLanguageTag("GB"));
 //        LocalDate dd = LocalDate.parse(dateString, formatter);
 //        System.out.println("Converted date: "+dd);

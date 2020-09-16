@@ -2,6 +2,7 @@ package training.supportbank;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
@@ -13,10 +14,16 @@ public class Bank {
 
     public Bank(String name) {
         this.name = name;
+        System.out.println("Bank " + this.name + " created.");
     }
 
-    public void processCSVFile(String filePath) {
-        System.out.println("Getting data from '" + filePath + "'...");
+    public Bank() {
+        this("Amex");
+
+    }
+
+    public void processCSVFile(String filePath, boolean showChanges) {
+        if (showChanges) System.out.println("Getting data from '" + filePath + "'...");
 
         ArrayList<String[]> records = new ArrayList<>();
         List<String> titles = new ArrayList<>();
@@ -30,59 +37,90 @@ public class Bank {
             }
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                    records.add(values);
+                records.add(values);
             }
-            processDataReceivedFromFile(titles,records);
+            processDataReceivedFromFile(titles, records, showChanges);
         } catch (Exception e) {
             System.out.println("Error during reading file: " + e);
         }
     }
-
-    private void processDataReceivedFromFile(List<String> titles, ArrayList<String[]> records) {
+    private void processDataReceivedFromFile(List<String> titles, ArrayList<String[]> records, boolean showChanges) {
         //to do (urgency 2/10): check if received variables are ot empty, throw error if yes
 
-        System.out.println("TITLES: \n" +titles +"\n");
-//        System.out.println(records.get(0)[titles.indexOf("From")]);
+        if (showChanges) {
+            System.out.println("TITLES: \n" + titles + "\n");
+            System.out.println("Following transactions added into the bank database:");
+        }
 
-//        records.forEach(record->{
-        String[] record = records.get(0);
-        System.out.println(record[titles.indexOf("From")]);
-        //process a row
-        String userAccountName = record[titles.indexOf("From")];
-        if(getUserAccountByUserName(userAccountName)==null) createUserAccount(userAccountName);
+        records.forEach(record -> {
+//        String[] record = records.get(0);
+            String userAccountName = record[titles.indexOf("From")];
+            if (getUserAccountByUserName(userAccountName) == null) createUserAccount(userAccountName);
 
-        userAccountName = record[titles.indexOf("To")];
-        if(getUserAccountByUserName(userAccountName)==null) createUserAccount(userAccountName);
+            userAccountName = record[titles.indexOf("To")];
+            if (getUserAccountByUserName(userAccountName) == null) createUserAccount(userAccountName);
 
-        //save transaction also in bank itself
+            //save transaction also in bank itself
 
-        this.transactions.add(new Transaction(
-                record[titles.indexOf("Date")],
-                record[titles.indexOf("Amount")],
-                record[titles.indexOf("From")],
-                record[titles.indexOf("To")],
-                record[titles.indexOf("Narrative")]));
+            this.transactions.add(new Transaction(
+                    record[titles.indexOf("Date")],
+                    record[titles.indexOf("Amount")],
+                    record[titles.indexOf("From")],
+                    record[titles.indexOf("To")],
+                    record[titles.indexOf("Narrative")]));
 
-        System.out.println(transactions.get(0).getInfo());
-
-
-
-//        });
+            if (showChanges) System.out.println(transactions.get(transactions.size() - 1).getInfo());
+        });
 
     }
+    private void createUserAccount(String userName) {
+        //received name was checked against the 'db', therefore this check is not needed now. We know this user doesn't exist.
+        this.userAccounts.add(new UserAccount(userName));
+    }
 
+    public void showOneUserBalance(String userName) {
+        System.out.println(userName + " has currently £ " + getAccountTotal(userName) + ".");
+    }
+    public void showOneUserTransactions(String userName){
+        System.out.println("Transactions of '" + userName + ":");
+        for (int i = 0; i<transactions.size();i++){
+            Transaction transaction = transactions.get(i);
+            if (transaction.getFrom().equals(userName)) System.out.println(" -" + transaction.getInfo());
+            if (transaction.getTo().equals(userName)) System.out.println(" +" + transaction.getInfo());
+        }
+    }
+
+    public void showAllUsersNames() {
+        System.out.println("\n" + name + "bank users:");
+        userAccounts.forEach(account -> System.out.println(account.getUserName()));
+    }
+    public void showAllUsersAndBalance() {
+        userAccounts.forEach(account -> {
+            String userName = account.getUserName();
+            System.out.println(userName + ": £" + getAccountTotal(userName));
+        });
+    }
+
+
+
+    //just to check if account exists
     private UserAccount getUserAccountByUserName(String userName) {
-        for(UserAccount account : userAccounts) {
-            if(account.getUserName().equals(userName)) {
+        for (UserAccount account : userAccounts) {
+            if (account.getUserName().equals(userName)) {
                 return account;
             }
         }
         return null;
     }
 
-    private void createUserAccount (String userName){
-        //received name was checked against the 'db', therefore this check is not needed now. We know this user doesn't exist.
-        this.userAccounts.add(new UserAccount(userName));
+    public BigDecimal getAccountTotal(String name) {
+        BigDecimal sum = new BigDecimal("0");
+        for (int i = 0; i < transactions.size(); i++) {
+            Transaction transaction = transactions.get(i);
+            if (transaction.getFrom().equals(name)) sum = sum.subtract(transaction.getAmount());
+            if (transaction.getTo().equals(name)) sum = sum.add(transaction.getAmount());
+        }
+        return sum;
     }
 
-    }
+}
