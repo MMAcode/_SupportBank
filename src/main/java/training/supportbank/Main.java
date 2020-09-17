@@ -44,9 +44,5 @@ public class Main {
                 bank.showOneUserTransactions(userName);
             }
         } while (choice!=9);
-
-//        bank.showOneUserBalance("Ben B");
-//        bank.showAllUsersAndBalance();
-//        bank.showOneUserTransactions("Rob S");
     }
 }

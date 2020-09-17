@@ -24,7 +24,6 @@ public class Bank {
     public String getName() {
         return name;
     }
-
     public void processCSVFile(String filePath, boolean showChanges) {
         if (showChanges) System.out.println("Getting data from '" + filePath + "'...");
         ArrayList<String[]> records = new ArrayList<>();
@@ -95,7 +94,6 @@ public class Bank {
     }
 
 
-
     //just to check if account exists
     private UserAccount getUserAccountByUserName(String userName) {
         for (UserAccount account : userAccounts) {
@@ -105,7 +103,7 @@ public class Bank {
         }
         return null;
     }
-    public BigDecimal getAccountTotal(String name) {
+    private BigDecimal getAccountTotal(String name) {
         BigDecimal sum = new BigDecimal("0");
         for (int i = 0; i < transactions.size(); i++) {
             Transaction transaction = transactions.get(i);
