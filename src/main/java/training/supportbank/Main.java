@@ -16,15 +16,37 @@
 
 package training.supportbank;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String args[]) {
 
-        Bank amex = new Bank();
-        amex.processCSVFile("Transactions2014.csv",false);
+        Bank bank = new Bank();
+        bank.processCSVFile("Transactions2014.csv",false);
 
-//        amex.showUserNames();
-//        amex.showAllUsersAndBalance();
-        amex.showOneUserBalance("Rob S");
-        amex.showOneUserTransactions("Rob S");
+        //USER INTERFACE
+        int choice = 0;
+        System.out.println("\nWelcome in '"+bank.getName()+"' bank.");
+        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.println("\nWhat would you like to do?");
+            System.out.println("a) List all account users. (press '1')");
+            System.out.println("b) List all transactions of an user (type user name).");
+            System.out.println("c) Finish. (press '9'");
+            System.out.print("Your choice: ");
+            if (scanner.hasNextInt()){
+                choice = scanner.nextInt();
+                if ( choice == 1) bank.showAllUsersAndBalance();
+                if ( choice == 9) System.out.println("It was a pleasure to serve you today.");
+                scanner.nextLine();
+            } else {
+                String userName = scanner.nextLine();
+                bank.showOneUserTransactions(userName);
+            }
+        } while (choice!=9);
+
+//        bank.showOneUserBalance("Ben B");
+//        bank.showAllUsersAndBalance();
+//        bank.showOneUserTransactions("Rob S");
     }
 }
